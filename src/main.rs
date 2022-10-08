@@ -1,14 +1,15 @@
-use clap::App;
+use clap::Parser;
 use rand::prelude::*;
 
-fn main() -> Result<(), String> {
-    let matches = App::new("Random C uint8_t array generator")
-        .version(clap::crate_version!())
-        .args_from_usage("<LENGTH>   'Length of array to generate'")
-        .get_matches();
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Cli {
+    length: u32
+}
 
-    let num_elements = clap::value_t!(matches.value_of("LENGTH"), u32)
-        .map_err(|_| "Expected an integer for LENGTH")?;
+fn main() -> Result<(), String> {
+    let cli = Cli::parse();
+    let num_elements = cli.length;
 
     let mut rng = thread_rng();
     let mut nums: Vec<u8> = vec![];
